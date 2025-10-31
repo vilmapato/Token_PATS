@@ -1,10 +1,15 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token_2022::{self, initialize_mint2, InitializeMint2, Token2022};
+use anchor_spl::token_2022::{self, initialize_mint2, InitializeMint2, spl_token_2022::{extension::ExtensionType, pod::PodMint} };
 
 
 pub fn initialize_mint(ctx: Context<InitializeMintSimple>)-> Result<()> {
+    //define contx
+    let creator = &ctx.accounts.creator;
+    let mint = &ctx.accounts.mint;
+    let token_program = &ctx.accounts.token_program;
     
-    let cpi_ctx = CpiContext::new(
+    //init mint
+    let mint_ctx = CpiContext::new(
         ctx.accounts.token_program.to_account_info(),
         InitializeMint2 {
             mint: ctx.accounts.mint.to_account_info(),
@@ -25,7 +30,7 @@ pub struct InitializeMintSimple<'info> {
     #[account(
         init,
         payer = creator,
-        space = 82, //82 bytes is the required space for a mint with InitializeMint2
+        space = ExtensionType::try_calculate_account_len::<PodMint>(&[ExtensionType::MetadataPointer])?,
         owner = token_program.key()
     )]
     pub mint: AccountInfo<'info>,
