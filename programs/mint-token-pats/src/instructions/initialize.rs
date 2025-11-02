@@ -1,5 +1,8 @@
 use anchor_lang::prelude::*;
-use anchor_spl::{token_2022::{self, InitializeMint2, update_metadata, spl_token_2022::{extension::ExtensionType, pod::PodMint} }, token_interface::{MetadataPointerInitialize, token_metadata}};
+use anchor_spl::{
+    token_2022::{
+        self, InitializeMint2, spl_token_2022::{
+            extension::ExtensionType, pod::PodMint} }, token_interface::{MetadataPointerInitialize},};
 
 
 pub fn initialize_mint(ctx: Context<InitializeMintSimple>)-> Result<()> {
